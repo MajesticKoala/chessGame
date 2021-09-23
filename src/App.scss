@@ -1,0 +1,83 @@
+.container {
+  width: calc(100vh - 100px);
+  max-width: calc(100vw - 10px);
+  margin: 0 auto;
+  padding-top: 20px;
+  .board {
+    height: 0;
+    padding-bottom: 100%;
+    width: 100%;
+    margin: 0 auto;
+    border: 2px solid #000;
+    // width: 400px;
+    // height: 400px;
+    display: grid;
+    grid-template-columns: repeat(8, 12.5%);
+    grid-template-columns: repeat(8, 12.5%);
+    .tile {
+      height: 0;
+      width: 100%;
+      padding-bottom: 100%;
+    }
+    .white {
+      background-color: #eee;
+      color: #333;
+    }
+    .black {
+      background-color: #333;
+      color: #fff;
+    }
+
+
+
+    // Pieces
+    .bb {
+      background-image: url('./assets/bb.png');
+      background-size: 100%;
+    }
+    .bk {
+      background-image: url('./assets/bk.png');
+      background-size: 100%;
+    }
+    .bn {
+      background-image: url('./assets/bn.png');
+      background-size: 100%;
+    }
+    .bp {
+      background-image: url('./assets/bp.png');
+      background-size: 100%;
+    }
+    .bq {
+      background-image: url('./assets/bq.png');
+      background-size: 100%;
+    }
+    .br {
+      background-image: url('./assets/br.png');
+      background-size: 100%;
+    }
+    .wb {
+      background-image: url('./assets/wb.png');
+      background-size: 100%;
+    }
+    .wk {
+      background-image: url('./assets/wk.png');
+      background-size: 100%;
+    }
+    .wn {
+      background-image: url('./assets/wn.png');
+      background-size: 100%;
+    }
+    .wp {
+      background-image: url('./assets/wp.png');
+      background-size: 100%;
+    }
+    .wq {
+      background-image: url('./assets/wq.png');
+      background-size: 100%;
+    }
+    .wr {
+      background-image: url('./assets/wr.png');
+      background-size: 100%;
+    }
+  }
+}
