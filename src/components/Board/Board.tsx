@@ -1,17 +1,16 @@
 import './Board.scss';
+import {
+    Piece,
+    startBoardState
+} from '../../constants';
 
 import React, { useRef, useState } from 'react'
 import Tile from '../Tile/Tile';
 
-interface Piece {
-    tile: number
-}
-
-
 export default function Board() {
     const [activePiece, setActivePiece] = useState<HTMLElement | null>(null);
-    const [position, setPosition] = useState<String>();
-    const [pieces, setPieces] = useState<Piece[]>([]);
+    const [gridPosition, setGridPosition] = useState<number>();
+    const [pieces, setPieces] = useState<Piece[]>(startBoardState);
 
     const boardRef = useRef<HTMLDivElement>(null);
 
@@ -19,6 +18,10 @@ export default function Board() {
         const element = e.target as HTMLElement;
         const board = boardRef.current;
         if (element.classList.contains("piece") && board) {
+            const gridx = Math.floor((e.clientX - board.offsetLeft)/(board.offsetWidth/8));
+            const gridy = Math.floor((e.clientY - board.offsetTop)/(board.offsetHeight/8));
+            const gridpos = (gridy * 8) + gridx;
+            setGridPosition(gridpos);
             const x = e.clientX - board.offsetLeft - (board.offsetWidth/16);
             const y = e.clientY - board.offsetTop - (board.offsetHeight/16);
             element.style.left = `${x}px`;
@@ -46,8 +49,23 @@ export default function Board() {
         }
     }
     function dropPiece(e: React.MouseEvent) {
-        if (activePiece) {
-            setActivePiece(null);
+        const board = boardRef.current;
+        if (board) {
+            const x = Math.floor((e.clientX - board.offsetLeft)/(board.offsetWidth/8));
+            const y = Math.floor((e.clientY - board.offsetTop)/(board.offsetHeight/8));
+            const pos = (y * 8) + x;
+            if (activePiece) {
+                setPieces((value) => {
+                    const pieces = value.map(p => {
+                        if (p.position === gridPosition) {
+                            p.position = pos;
+                        }
+                        return p;
+                    })
+                    return pieces;
+                });
+                setActivePiece(null);
+            }
         }
     }
 
@@ -75,8 +93,10 @@ export default function Board() {
     }
 
     let board = [];
-    const startingFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-    setPosition(convertFEN(startingFen));
+    //const startingFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+    //const startingFen = "5r2/p2b1rkp/1bB2N2/1P3p2/1q2NK2/6QP/3n1P2/6R1 b - - 1 1";
+    //setPosition(convertFEN(startingFen));
+    //const position = convertFEN(startingFen);
     //const position = "rnbqkbnrppppppppeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeePPPPPPPPRNBQKBNR"
 
     const pieceMap: any = {
@@ -95,8 +115,11 @@ export default function Board() {
     }
 
     for (let i = 0; i < 64; i++) {
-        if (position[i] !== 'e') {
-            board.push(<Tile key={i} number={i} piece={pieceMap[position[i]]}/>);
+        const piece = pieces.find((p) => {
+            return p.position === i;
+        });
+        if (piece) {
+            board.push(<Tile key={i} number={i} piece={piece.piece}/>);
         } else {
             board.push(<Tile key={i} number={i}/>);
         }
